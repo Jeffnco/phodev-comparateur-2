@@ -509,6 +509,9 @@ class WP_Comparator_Admin {
         $item_id = intval($_POST['item_id']);
         $type_id = intval($_POST['type_id']);
         
+        // Tables nécessaires
+        $table_item_filters = $wpdb->prefix . 'comparator_item_filters';
+        
         // Vérifier que la table des descriptions longues existe
         if ($wpdb->get_var("SHOW TABLES LIKE '$table_field_descriptions'") != $table_field_descriptions) {
             wp_redirect(admin_url('admin.php?page=wp-comparator-items&type_id=' . $type_id . '&error=table_missing'));
@@ -525,6 +528,7 @@ class WP_Comparator_Admin {
         foreach ($fields as $field) {
             $field_key = 'field_' . $field->id;
             $long_desc_key = 'long_description_' . $field->id;
+            $filter_key = 'filter_' . $field->id;
             
             if (isset($_POST[$field_key])) {
                 // MODIFICATION: Utiliser wp_kses_post() au lieu de sanitize_text_field() pour conserver le HTML
@@ -583,6 +587,37 @@ class WP_Comparator_Admin {
                             'item_id' => $item_id,
                             'field_id' => $field->id,
                             'long_description' => $long_description
+                        ),
+                        array('%d', '%d', '%s')
+                    );
+                }
+            }
+            
+            // Gérer les valeurs de filtres
+            if (isset($_POST[$filter_key]) && $field->is_filterable) {
+                $filter_value = sanitize_text_field($_POST[$filter_key]);
+                
+                // Mettre à jour ou insérer la valeur de filtre
+                $existing_filter = $wpdb->get_var($wpdb->prepare(
+                    "SELECT id FROM $table_item_filters WHERE item_id = %d AND field_id = %d",
+                    $item_id, $field->id
+                ));
+                
+                if ($existing_filter) {
+                    $wpdb->update(
+                        $table_item_filters,
+                        array('filter_value' => $filter_value),
+                        array('item_id' => $item_id, 'field_id' => $field->id),
+                        array('%s'),
+                        array('%d', '%d')
+                    );
+                } else {
+                    $wpdb->insert(
+                        $table_item_filters,
+                        array(
+                            'item_id' => $item_id,
+                            'field_id' => $field->id,
+                            'filter_value' => $filter_value
                         ),
                         array('%d', '%d', '%s')
                     );
@@ -878,6 +913,29 @@ class WP_Comparator_Admin {
                     
                     // Champ principal
                     echo '<textarea id="field_' . $field->id . '" name="field_' . $field->id . '" rows="3" class="large-text" placeholder="Valeur principale...">' . esc_textarea(stripslashes($current_value)) . '</textarea>';
+                    
+                    // Select de filtre si le champ est filtrable
+                    if ($field->is_filterable && !empty($field->filter_options)) {
+                        echo '<div style="margin-top: 10px;">';
+                        echo '<label for="filter_' . $field->id . '" style="font-weight: 600; color: #28a745;">Valeur du filtre :</label>';
+                        echo '<select id="filter_' . $field->id . '" name="filter_' . $field->id . '" class="regular-text">';
+                        echo '<option value="">-- Choisir une valeur --</option>';
+                        
+                        $filter_options = array_map('trim', explode(',', $field->filter_options));
+                        $current_filter_value = $wpdb->get_var($wpdb->prepare(
+                            "SELECT filter_value FROM {$wpdb->prefix}comparator_item_filters WHERE item_id = %d AND field_id = %d",
+                            $item_id, $field->id
+                        ));
+                        
+                        foreach ($filter_options as $option) {
+                            $selected = ($current_filter_value === $option) ? 'selected' : '';
+                            echo '<option value="' . esc_attr($option) . '" ' . $selected . '>' . esc_html($option) . '</option>';
+                        }
+                        
+                        echo '</select>';
+                        echo '<p class="description">Cette valeur sera utilisée pour le filtrage sur le site</p>';
+                        echo '</div>';
+                    }
                     
                     // Champ description longue
                     echo '<div style="margin-top: 10px;">';
