@@ -179,7 +179,7 @@ if (!empty($type->intro_text)) {
                                             <div class="field-value">
                                                 <?php 
                                                 if (!empty($value1)) {
-                                                    echo wp_kses_post(nl2br(stripslashes($value1 ?: '')));
+                                                    echo wp_kses_post(stripslashes($value1 ?: ''));
                                                 } else {
                                                     echo '<span class="no-data">-</span>';
                                                 }
@@ -189,7 +189,7 @@ if (!empty($type->intro_text)) {
                                                 <div class="field-more-info">
                                                     <button class="btn-more-info" type="button">En savoir plus</button>
                                                     <div class="more-info-content" style="display: none;">
-                                                        <?php echo wp_kses_post(nl2br(stripslashes($long_desc1 ?: ''))); ?>
+                                                        <?php echo wp_kses_post(stripslashes($long_desc1 ?: '')); ?>
                                                     </div>
                                                 </div>
                                             <?php endif; ?>
@@ -199,7 +199,7 @@ if (!empty($type->intro_text)) {
                                             <div class="field-value">
                                                 <?php 
                                                 if (!empty($value2)) {
-                                                    echo wp_kses_post(nl2br(stripslashes($value2 ?: '')));
+                                                    echo wp_kses_post(stripslashes($value2 ?: ''));
                                                 } else {
                                                     echo '<span class="no-data">-</span>';
                                                 }
@@ -209,7 +209,7 @@ if (!empty($type->intro_text)) {
                                                 <div class="field-more-info">
                                                     <button class="btn-more-info" type="button">En savoir plus</button>
                                                     <div class="more-info-content" style="display: none;">
-                                                        <?php echo wp_kses_post(nl2br(stripslashes($long_desc2 ?: ''))); ?>
+                                                        <?php echo wp_kses_post(stripslashes($long_desc2 ?: '')); ?>
                                                     </div>
                                                 </div>
                                             <?php endif; ?>

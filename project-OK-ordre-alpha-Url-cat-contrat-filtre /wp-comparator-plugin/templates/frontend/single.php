@@ -156,7 +156,7 @@
                                         <div class="field-short-value">
                                             <?php 
                                             if (!empty($value)) {
-                                                echo wp_kses_post(nl2br(stripslashes($value)));
+                                                echo wp_kses_post(stripslashes($value));
                                             } else {
                                                 echo '<span style="color: #999;">-</span>';
                                             }
@@ -167,7 +167,7 @@
                                         <div class="field-more-info" style="margin-top: 10px;">
                                             <button class="btn-more-info" type="button">En savoir plus</button>
                                             <div class="more-info-content" style="display: none;">
-                                                <?php echo wp_kses_post(nl2br(stripslashes($long_description))); ?>
+                                                <?php echo wp_kses_post(stripslashes($long_description)); ?>
                                             </div>
                                         </div>
                                         <?php endif; ?>
