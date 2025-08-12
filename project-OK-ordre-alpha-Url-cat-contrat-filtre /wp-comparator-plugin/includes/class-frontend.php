@@ -135,43 +135,42 @@ class WP_Comparator_Frontend {
         if ($atts['show_filters'] === 'true') {
             $table_fields = $wpdb->prefix . 'comparator_fields';
             
-            // Récupérer les champs filtrables avec leurs catégories parentes
-            $filterable_fields_grouped = $wpdb->get_results($wpdb->prepare(
-                "SELECT 
-                    f.*, 
-                    c.name as category_name,
-                    c.id as category_id,
-                    c.sort_order as category_sort_order
-                FROM $table_fields f
-                LEFT JOIN $table_fields c ON f.parent_category_id = c.id
-                WHERE f.type_id = %d AND f.is_filterable = 1 AND f.field_type = 'description'
-                ORDER BY c.sort_order, f.sort_order",
+            // SOLUTION 1 : Pré-trier les catégories puis construire le tableau dans le bon ordre
+            
+            // 1. Récupérer d'abord les catégories triées par sort_order
+            $categories_ordered = $wpdb->get_results($wpdb->prepare(
+                "SELECT id, name, sort_order 
+                FROM $table_fields 
+                WHERE type_id = %d AND field_type = 'category' 
+                ORDER BY sort_order ASC",
                 $type->id
             ));
             
-            // Grouper les filtres par catégorie
-            foreach ($filterable_fields_grouped as $field) {
-                $category_name = $field->category_name ?: 'Autres';
-                $category_id = $field->category_id ?: 0;
+            // 2. Pour chaque catégorie (dans l'ordre), récupérer ses champs filtrables
+            foreach ($categories_ordered as $category) {
+                $category_fields = $wpdb->get_results($wpdb->prepare(
+                    "SELECT f.*, %s as category_name, %d as category_id, %d as category_sort_order
+                    FROM $table_fields f
+                    WHERE f.parent_category_id = %d AND f.is_filterable = 1 AND f.field_type = 'description'
+                    ORDER BY f.sort_order ASC",
+                    $category->name,
+                    $category->id,
+                    $category->sort_order,
+                    $category->id
+                ));
                 
-                if (!isset($filters_by_category[$category_name])) {
-                    $filters_by_category[$category_name] = array(
-                        'category_id' => $category_id,
-                        'category_sort_order' => $field->category_sort_order ?: 999,
-                        'fields' => array()
+                // 3. Si cette catégorie a des champs filtrables, l'ajouter au tableau
+                if (!empty($category_fields)) {
+                    $filters_by_category[$category->name] = array(
+                        'category_id' => $category->id,
+                        'category_sort_order' => $category->sort_order,
+                        'fields' => $category_fields
                     );
+                    
+                    // Ajouter aussi à la liste plate pour compatibilité
+                    $filterable_fields = array_merge($filterable_fields, $category_fields);
                 }
-                
-                $filters_by_category[$category_name]['fields'][] = $field;
             }
-            
-            // Trier les catégories par sort_order
-            uasort($filters_by_category, function($a, $b) {
-                return $a['category_sort_order'] - $b['category_sort_order'];
-            });
-            
-            // Garder aussi la liste plate pour la compatibilité
-            $filterable_fields = $filterable_fields_grouped;
         }
         
         // Enrichir les items avec leurs valeurs de filtres et catégories
