@@ -240,7 +240,7 @@ class WP_Comparator_Admin {
         $table_fields = $wpdb->prefix . 'comparator_fields';
         
         $type_id = intval($_POST['type_id']);
-        $name = sanitize_text_field($_POST['name']);
+        $name = stripslashes(sanitize_text_field($_POST['name']));
         $field_type = sanitize_text_field($_POST['field_type']);
         $parent_category_id = !empty($_POST['parent_category_id']) ? intval($_POST['parent_category_id']) : null;
         $has_info_button = isset($_POST['has_info_button']) ? intval($_POST['has_info_button']) : 0;
@@ -294,7 +294,7 @@ class WP_Comparator_Admin {
         
         $field_id = intval($_POST['field_id']);
         $type_id = intval($_POST['type_id']);
-        $name = sanitize_text_field($_POST['name']);
+        $name = stripslashes(sanitize_text_field($_POST['name']));
         $field_type = sanitize_text_field($_POST['field_type']);
         $parent_category_id = !empty($_POST['parent_category_id']) ? intval($_POST['parent_category_id']) : null;
         $has_info_button = isset($_POST['has_info_button']) ? intval($_POST['has_info_button']) : 0;
