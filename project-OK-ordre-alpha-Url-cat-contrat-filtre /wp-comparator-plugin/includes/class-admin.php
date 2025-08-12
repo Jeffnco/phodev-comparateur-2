@@ -882,7 +882,7 @@ class WP_Comparator_Admin {
                     // Champ description longue
                     echo '<div style="margin-top: 10px;">';
                     echo '<label for="long_description_' . $field->id . '" style="font-weight: 600; color: #0073aa;">Description longue (optionnelle) :</label>';
-                    echo '<textarea id="long_description_' . $field->id . '" name="long_description_' . $field->id . '" rows="4" class="large-text" placeholder="Description détaillée qui apparaîtra dans &quot;En savoir plus&quot;...">' . esc_textarea(stripslashes($current_long_desc)) . '</textarea>';
+                    echo '<textarea id="long_description_' . $field->id . '" name="long_description_' . $field->id . '" rows="4" class="large-text" placeholder="Description détaillée qui apparaîtra dans "En savoir plus"...">' . esc_textarea(stripslashes($current_long_desc ?: '')) . '</textarea>';
                     echo '<p class="description">Cette description apparaîtra quand l\'utilisateur clique sur "En savoir plus"</p>';
                     echo '</div>';
                     
