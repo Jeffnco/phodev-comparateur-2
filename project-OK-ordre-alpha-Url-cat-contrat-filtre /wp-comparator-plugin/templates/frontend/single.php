@@ -28,7 +28,7 @@
                     </div>
                     <div class="field-value">
                         <div class="field-short-value">
-                            <?php echo wp_kses_post(stripslashes($item->description)); ?>
+                            <?php echo wp_kses_post(stripslashes($item->description ?: '')); ?>
                         </div>
                     </div>
                 </div>

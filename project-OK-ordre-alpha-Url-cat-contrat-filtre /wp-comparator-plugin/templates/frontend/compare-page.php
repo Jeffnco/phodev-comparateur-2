@@ -58,22 +58,22 @@ if (!empty($type->intro_text)) {
                 </div>
                 <div class="contract-info">
                     <?php if ($display_item1->contrat): ?>
-                        <p><strong>Contrat :</strong> <?php echo esc_html(stripslashes($display_item1->contrat)); ?></p>
+                        <p><strong>Contrat :</strong> <?php echo esc_html(stripslashes($display_item1->contrat ?: '')); ?></p>
                     <?php endif; ?>
                     <?php if ($display_item1->description): ?>
                         <div class="contract-description">
                             <strong>Description :</strong>
-                            <p><?php echo wp_kses_post(nl2br(stripslashes($display_item1->description))); ?></p>
+                            <p><?php echo wp_kses_post(nl2br(stripslashes($display_item1->description ?: ''))); ?></p>
                         </div>
                     <?php endif; ?>
                     <?php if ($display_item1->assureur): ?>
-                        <p><strong>Assureur :</strong> <?php echo esc_html(stripslashes($display_item1->assureur)); ?></p>
+                        <p><strong>Assureur :</strong> <?php echo esc_html(stripslashes($display_item1->assureur ?: '')); ?></p>
                     <?php endif; ?>
                     <?php if ($display_item1->version): ?>
-                        <p><strong>Version :</strong> <?php echo esc_html(stripslashes($display_item1->version)); ?></p>
+                        <p><strong>Version :</strong> <?php echo esc_html(stripslashes($display_item1->version ?: '')); ?></p>
                     <?php endif; ?>
                     <?php if ($display_item1->territorialite): ?>
-                        <p><strong>Territorialité :</strong> <?php echo esc_html(stripslashes($display_item1->territorialite)); ?></p>
+                        <p><strong>Territorialité :</strong> <?php echo esc_html(stripslashes($display_item1->territorialite ?: '')); ?></p>
                     <?php endif; ?>
                 </div>
                 <?php if ($display_item1->document_url): ?>
@@ -99,22 +99,22 @@ if (!empty($type->intro_text)) {
                 </div>
                 <div class="contract-info">
                     <?php if ($display_item2->contrat): ?>
-                        <p><strong>Contrat :</strong> <?php echo esc_html(stripslashes($display_item2->contrat)); ?></p>
+                        <p><strong>Contrat :</strong> <?php echo esc_html(stripslashes($display_item2->contrat ?: '')); ?></p>
                     <?php endif; ?>
                     <?php if ($display_item2->description): ?>
                         <div class="contract-description">
                             <strong>Description :</strong>
-                            <p><?php echo wp_kses_post(nl2br(stripslashes($display_item2->description))); ?></p>
+                            <p><?php echo wp_kses_post(nl2br(stripslashes($display_item2->description ?: ''))); ?></p>
                         </div>
                     <?php endif; ?>
                     <?php if ($display_item2->assureur): ?>
-                        <p><strong>Assureur :</strong> <?php echo esc_html(stripslashes($display_item2->assureur)); ?></p>
+                        <p><strong>Assureur :</strong> <?php echo esc_html(stripslashes($display_item2->assureur ?: '')); ?></p>
                     <?php endif; ?>
                     <?php if ($display_item2->version): ?>
-                        <p><strong>Version :</strong> <?php echo esc_html(stripslashes($display_item2->version)); ?></p>
+                        <p><strong>Version :</strong> <?php echo esc_html(stripslashes($display_item2->version ?: '')); ?></p>
                     <?php endif; ?>
                     <?php if ($display_item2->territorialite): ?>
-                        <p><strong>Territorialité :</strong> <?php echo esc_html(stripslashes($display_item2->territorialite)); ?></p>
+                        <p><strong>Territorialité :</strong> <?php echo esc_html(stripslashes($display_item2->territorialite ?: '')); ?></p>
                     <?php endif; ?>
                 </div>
                 <?php if ($display_item2->document_url): ?>
@@ -179,7 +179,7 @@ if (!empty($type->intro_text)) {
                                             <div class="field-value">
                                                 <?php 
                                                 if (!empty($value1)) {
-                                                    echo wp_kses_post(nl2br(stripslashes($value1)));
+                                                    echo wp_kses_post(nl2br(stripslashes($value1 ?: '')));
                                                 } else {
                                                     echo '<span class="no-data">-</span>';
                                                 }
@@ -189,7 +189,7 @@ if (!empty($type->intro_text)) {
                                                 <div class="field-more-info">
                                                     <button class="btn-more-info" type="button">En savoir plus</button>
                                                     <div class="more-info-content" style="display: none;">
-                                                        <?php echo wp_kses_post(nl2br(stripslashes($long_desc1))); ?>
+                                                        <?php echo wp_kses_post(nl2br(stripslashes($long_desc1 ?: ''))); ?>
                                                     </div>
                                                 </div>
                                             <?php endif; ?>
@@ -199,7 +199,7 @@ if (!empty($type->intro_text)) {
                                             <div class="field-value">
                                                 <?php 
                                                 if (!empty($value2)) {
-                                                    echo wp_kses_post(nl2br(stripslashes($value2)));
+                                                    echo wp_kses_post(nl2br(stripslashes($value2 ?: '')));
                                                 } else {
                                                     echo '<span class="no-data">-</span>';
                                                 }
@@ -209,7 +209,7 @@ if (!empty($type->intro_text)) {
                                                 <div class="field-more-info">
                                                     <button class="btn-more-info" type="button">En savoir plus</button>
                                                     <div class="more-info-content" style="display: none;">
-                                                        <?php echo wp_kses_post(nl2br(stripslashes($long_desc2))); ?>
+                                                        <?php echo wp_kses_post(nl2br(stripslashes($long_desc2 ?: ''))); ?>
                                                     </div>
                                                 </div>
                                             <?php endif; ?>
