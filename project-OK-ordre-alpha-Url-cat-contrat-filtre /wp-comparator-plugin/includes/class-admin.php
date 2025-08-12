@@ -912,7 +912,7 @@ class WP_Comparator_Admin {
                     echo '<td>';
                     
                     // Champ principal
-                    echo '<textarea id="field_' . $field->id . '" name="field_' . $field->id . '" rows="3" class="large-text" placeholder="Valeur principale...">' . esc_textarea(stripslashes($current_value)) . '</textarea>';
+                    echo '<textarea id="field_' . $field->id . '" name="field_' . $field->id . '" rows="3" class="large-text" placeholder="Valeur principale...">' . esc_textarea(stripslashes($current_value ?: '')) . '</textarea>';
                     
                     // Select de filtre si le champ est filtrable
                     if ($field->is_filterable && !empty($field->filter_options)) {
