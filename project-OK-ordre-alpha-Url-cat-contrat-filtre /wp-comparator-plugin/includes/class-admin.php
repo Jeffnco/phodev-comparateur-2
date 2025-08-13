@@ -396,6 +396,12 @@ class WP_Comparator_Admin {
             
             wp_redirect(admin_url('admin.php?page=wp-comparator-items&type_id=' . $type_id . '&message=item_added'));
         } else {
+            // Debug : Log des erreurs de sauvegarde
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log("WP Comparator - Erreur lors de la création du contrat");
+                error_log("WP Comparator - Erreur SQL: " . $wpdb->last_error);
+                error_log("WP Comparator - Données tentées: " . print_r($_POST, true));
+            }
             wp_redirect(admin_url('admin.php?page=wp-comparator-items&type_id=' . $type_id . '&error=item_not_added'));
         }
         exit;
