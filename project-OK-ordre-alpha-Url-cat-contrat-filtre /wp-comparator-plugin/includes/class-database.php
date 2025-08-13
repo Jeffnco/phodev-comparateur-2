@@ -77,7 +77,7 @@ class WP_Comparator_Database {
             document_url varchar(500),
             version varchar(100),
             assureur varchar(255),
-            territorialite varchar(255),
+            territorialite LONGTEXT,
             is_active tinyint(1) DEFAULT 1,
             sort_order int(11) DEFAULT 0,
             created_at datetime DEFAULT CURRENT_TIMESTAMP,
