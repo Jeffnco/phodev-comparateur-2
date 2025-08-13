@@ -127,7 +127,8 @@
                                 <label for="territorialite">Territorialité</label>
                             </th>
                             <td>
-                                <input type="text" id="territorialite" name="territorialite" class="regular-text">
+                                <textarea id="territorialite" name="territorialite" rows="3" class="large-text" placeholder="Ex: France métropolitaine, DOM-TOM, Europe, Monde entier..."></textarea>
+                                <p class="description">Décrivez la couverture géographique du contrat</p>
                             </td>
                         </tr>
                         <tr>
