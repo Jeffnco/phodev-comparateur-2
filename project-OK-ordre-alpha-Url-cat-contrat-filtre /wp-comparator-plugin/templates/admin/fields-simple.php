@@ -51,7 +51,7 @@
             <div class="admin-section">
                 <h2><?php echo $edit_field ? 'Modifier le champ' : 'Ajouter un nouveau champ'; ?></h2>
                 <form method="post" action="">
-                    <?php wp_nonce_field($edit_field ? 'wp_comparator_update_field' : 'wp_comparator_add_field', '_wpnonce'); ?>
+                    <?php wp_nonce_field($edit_field ? 'update_field' : 'add_field', '_wpnonce'); ?>
                     <input type="hidden" name="wp_comparator_action" value="<?php echo $edit_field ? 'update_field' : 'add_field'; ?>">
                     <input type="hidden" name="type_id" value="<?php echo $selected_type; ?>">
                     <?php if ($edit_field): ?>

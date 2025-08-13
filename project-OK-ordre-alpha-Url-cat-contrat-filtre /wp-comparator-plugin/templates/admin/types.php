@@ -43,7 +43,7 @@
         <div class="admin-section">
             <h2><?php echo $edit_type ? 'Modifier le type' : 'Ajouter un nouveau type'; ?></h2>
             <form method="post" action="">
-                <?php wp_nonce_field($edit_type ? 'wp_comparator_update_type' : 'wp_comparator_add_type', '_wpnonce'); ?>
+                <?php wp_nonce_field($edit_type ? 'update_type' : 'add_type', '_wpnonce'); ?>
                 <input type="hidden" name="wp_comparator_action" value="<?php echo $edit_type ? 'update_type' : 'add_type'; ?>">
                 <?php if ($edit_type): ?>
                     <input type="hidden" name="type_id" value="<?php echo $edit_type->id; ?>">

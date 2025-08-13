@@ -59,7 +59,7 @@
                 <p>Les catégories permettent de classer vos contrats (ex: Professionnels de santé, TNS, Salariés...)</p>
                 
                 <form method="post" action="">
-                    <?php wp_nonce_field($edit_category ? 'wp_comparator_update_contract_category' : 'wp_comparator_add_contract_category', '_wpnonce'); ?>
+                    <?php wp_nonce_field($edit_category ? 'update_contract_category' : 'add_contract_category', '_wpnonce'); ?>
                     <input type="hidden" name="wp_comparator_action" value="<?php echo $edit_category ? 'update_contract_category' : 'add_contract_category'; ?>">
                     <input type="hidden" name="type_id" value="<?php echo $selected_type; ?>">
                     <?php if ($edit_category): ?>

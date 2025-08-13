@@ -49,7 +49,7 @@
             <div class="admin-section">
                 <h2>Ajouter un nouveau contrat/produit</h2>
                 <form method="post" action="">
-                    <?php wp_nonce_field('wp_comparator_add_item', '_wpnonce'); ?>
+                    <?php wp_nonce_field('add_item', '_wpnonce'); ?>
                     <input type="hidden" name="wp_comparator_action" value="add_item">
                     <input type="hidden" name="type_id" value="<?php echo $selected_type; ?>">
                     

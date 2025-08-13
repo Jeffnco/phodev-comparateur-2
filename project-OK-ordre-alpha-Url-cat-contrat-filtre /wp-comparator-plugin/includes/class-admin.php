@@ -95,6 +95,11 @@ class WP_Comparator_Admin {
             return;
         }
         
+        // Vérification de sécurité supplémentaire
+        if (!wp_verify_nonce($_POST['_wpnonce'], $_POST['wp_comparator_action'])) {
+            wp_die('Erreur de sécurité : Token de sécurité invalide ou expiré. Veuillez rafraîchir la page et réessayer.');
+        }
+        
         $action = sanitize_text_field($_POST['wp_comparator_action']);
         
         switch ($action) {
@@ -129,10 +134,6 @@ class WP_Comparator_Admin {
     }
     
     private function handle_add_type() {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'wp_comparator_add_type')) {
-            wp_die('Erreur de sécurité');
-        }
-        
         global $wpdb;
         $table_types = $wpdb->prefix . 'comparator_types';
         
@@ -179,10 +180,6 @@ class WP_Comparator_Admin {
     }
     
     private function handle_update_type() {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'wp_comparator_update_type')) {
-            wp_die('Erreur de sécurité');
-        }
-        
         global $wpdb;
         $table_types = $wpdb->prefix . 'comparator_types';
         
@@ -232,10 +229,6 @@ class WP_Comparator_Admin {
     }
     
     private function handle_add_field() {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'wp_comparator_add_field')) {
-            wp_die('Erreur de sécurité');
-        }
-        
         global $wpdb;
         $table_fields = $wpdb->prefix . 'comparator_fields';
         
@@ -285,10 +278,6 @@ class WP_Comparator_Admin {
     }
     
     private function handle_update_field() {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'wp_comparator_update_field')) {
-            wp_die('Erreur de sécurité');
-        }
-        
         global $wpdb;
         $table_fields = $wpdb->prefix . 'comparator_fields';
         
@@ -340,10 +329,6 @@ class WP_Comparator_Admin {
     }
     
     private function handle_add_item() {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'wp_comparator_add_item')) {
-            wp_die('Erreur de sécurité');
-        }
-        
         global $wpdb;
         $table_items = $wpdb->prefix . 'comparator_items';
         
@@ -417,10 +402,6 @@ class WP_Comparator_Admin {
     }
     
     private function handle_update_item() {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'wp_comparator_update_item')) {
-            wp_die('Erreur de sécurité');
-        }
-        
         global $wpdb;
         $table_items = $wpdb->prefix . 'comparator_items';
         
@@ -498,10 +479,6 @@ class WP_Comparator_Admin {
     }
     
     private function handle_item_data_save() {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'wp_comparator_save_item_data')) {
-            wp_die('Erreur de sécurité');
-        }
-        
         global $wpdb;
         $table_values = $wpdb->prefix . 'comparator_values';
         $table_field_descriptions = $wpdb->prefix . 'comparator_field_descriptions';
@@ -630,10 +607,6 @@ class WP_Comparator_Admin {
     }
     
     private function handle_add_contract_category() {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'wp_comparator_add_contract_category')) {
-            wp_die('Erreur de sécurité');
-        }
-        
         global $wpdb;
         $table_contract_categories = $wpdb->prefix . 'comparator_contract_categories';
         
@@ -674,10 +647,6 @@ class WP_Comparator_Admin {
     }
     
     private function handle_update_contract_category() {
-        if (!wp_verify_nonce($_POST['_wpnonce'], 'wp_comparator_update_contract_category')) {
-            wp_die('Erreur de sécurité');
-        }
-        
         global $wpdb;
         $table_contract_categories = $wpdb->prefix . 'comparator_contract_categories';
         
@@ -871,7 +840,7 @@ class WP_Comparator_Admin {
         echo '<h2>Saisir les données pour : ' . esc_html($item->name) . '</h2>';
         
         echo '<form method="post" action="">';
-        wp_nonce_field('wp_comparator_save_item_data', '_wpnonce');
+        wp_nonce_field('save_item_data', '_wpnonce');
         echo '<input type="hidden" name="wp_comparator_action" value="save_item_data">';
         echo '<input type="hidden" name="item_id" value="' . $item_id . '">';
         echo '<input type="hidden" name="type_id" value="' . $type_id . '">';
@@ -1017,7 +986,7 @@ class WP_Comparator_Admin {
         echo '<h2>Modifier le contrat : ' . esc_html($item->name) . '</h2>';
         
         echo '<form method="post" action="">';
-        wp_nonce_field('wp_comparator_update_item', '_wpnonce');
+        wp_nonce_field('update_item', '_wpnonce');
         echo '<input type="hidden" name="wp_comparator_action" value="update_item">';
         echo '<input type="hidden" name="item_id" value="' . $item_id . '">';
         echo '<input type="hidden" name="type_id" value="' . $type_id . '">';
