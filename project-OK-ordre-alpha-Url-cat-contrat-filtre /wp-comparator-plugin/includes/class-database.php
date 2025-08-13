@@ -250,6 +250,21 @@ class WP_Comparator_Database {
         if (empty($column_exists)) {
             $wpdb->query("ALTER TABLE $table_types ADD COLUMN url_prefix VARCHAR(255) NULL AFTER description");
         }
+        
+        // Vérifier et corriger le type de la colonne territorialite
+        $table_items = $wpdb->prefix . 'comparator_items';
+        $territorialite_column = $wpdb->get_results($wpdb->prepare(
+            "SHOW COLUMNS FROM $table_items LIKE %s",
+            'territorialite'
+        ));
+        
+        if (!empty($territorialite_column)) {
+            $column_info = $territorialite_column[0];
+            // Si c'est VARCHAR, le changer en TEXT pour supporter les textes longs
+            if (strpos(strtolower($column_info->Type), 'varchar') !== false) {
+                $wpdb->query("ALTER TABLE $table_items MODIFY COLUMN territorialite TEXT");
+            }
+        }
     }
     
     private function insert_demo_data() {
