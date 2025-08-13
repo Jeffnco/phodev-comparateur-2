@@ -1035,7 +1035,8 @@ class WP_Comparator_Admin {
         
         echo '<tr>';
         echo '<th scope="row"><label for="territorialite">Territorialité</label></th>';
-        echo '<td><input type="text" id="territorialite" name="territorialite" class="regular-text" value="' . esc_attr(stripslashes($item->territorialite)) . '"></td>';
+        echo '<td><textarea id="territorialite" name="territorialite" rows="3" class="large-text" placeholder="Ex: France métropolitaine, DOM-TOM, Europe, Monde entier...">' . esc_textarea(stripslashes($item->territorialite)) . '</textarea>';
+        echo '<p class="description">Décrivez la couverture géographique du contrat</p></td>';
         echo '</tr>';
         
         // Catégories de contrats
