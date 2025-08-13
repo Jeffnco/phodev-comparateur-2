@@ -127,7 +127,8 @@
                                 <label for="territorialite">Territorialité</label>
                             </th>
                             <td>
-                                <textarea id="territorialite" name="territorialite" rows="3" class="large-text" placeholder="Ex: France métropolitaine, DOM-TOM, Europe, Monde entier..."></textarea>
+                                <textarea id="territorialite" name="territorialite" rows="3" class="large-text" placeholder="Ex: France métropolitaine, DOM-TOM, Europe, Monde entier...">' . esc_textarea(stripslashes($item->territorialite)) . '</textarea>
+                                <p class="description">Décrivez la couverture géographique du contrat</p>
                                 <p class="description">Décrivez la couverture géographique du contrat</p>
                             </td>
                         </tr>

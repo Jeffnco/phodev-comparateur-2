@@ -341,7 +341,7 @@ class WP_Comparator_Admin {
         $document_url = esc_url_raw($_POST['document_url']);
         $version = sanitize_text_field($_POST['version']);
         $assureur = sanitize_text_field($_POST['assureur']);
-        $territorialite = sanitize_text_field($_POST['territorialite']);
+        $territorialite = sanitize_textarea_field($_POST['territorialite']);
         $is_active = isset($_POST['is_active']) ? 1 : 0;
         $sort_order = intval($_POST['sort_order']);
         
@@ -396,12 +396,6 @@ class WP_Comparator_Admin {
             
             wp_redirect(admin_url('admin.php?page=wp-comparator-items&type_id=' . $type_id . '&message=item_added'));
         } else {
-            // Debug : Log des erreurs de sauvegarde
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log("WP Comparator - Erreur lors de la création du contrat");
-                error_log("WP Comparator - Erreur SQL: " . $wpdb->last_error);
-                error_log("WP Comparator - Données tentées: " . print_r($_POST, true));
-            }
             wp_redirect(admin_url('admin.php?page=wp-comparator-items&type_id=' . $type_id . '&error=item_not_added'));
         }
         exit;
@@ -421,7 +415,7 @@ class WP_Comparator_Admin {
         $document_url = esc_url_raw($_POST['document_url']);
         $version = sanitize_text_field($_POST['version']);
         $assureur = sanitize_text_field($_POST['assureur']);
-        $territorialite = sanitize_text_field($_POST['territorialite']);
+        $territorialite = sanitize_textarea_field($_POST['territorialite']);
         $is_active = isset($_POST['is_active']) ? 1 : 0;
         $sort_order = intval($_POST['sort_order']);
         
