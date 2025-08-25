@@ -119,10 +119,6 @@
                                     <span class="dashicons dashicons-info"></span>
                                 </button>
                                 <div class="info-tooltip">
-                                    <div class="info-tooltip-header">
-                                        <span style="font-weight: bold; font-size: 12px;">Information</span>
-                                        <button class="info-tooltip-close" type="button" title="Fermer">×</button>
-                                    </div>
                                     <?php echo nl2br(esc_html($category->info_content)); ?>
                                 </div>
                             <?php endif; ?>

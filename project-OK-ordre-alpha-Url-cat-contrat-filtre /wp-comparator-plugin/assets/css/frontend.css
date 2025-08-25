@@ -681,30 +681,6 @@
     cursor: default;
 }
 
-.info-tooltip-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-}
-
-.info-tooltip-close {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
-    padding: 0;
-    margin-left: 10px;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-}
-
-.info-tooltip-close:hover {
-    opacity: 1;
-}
-
 .info-btn,
 .info-btn-small {
     background: none;

@@ -129,39 +129,11 @@ jQuery(document).ready(function($) {
                 if (!hasCategory) {
                     showItem = false;
                 }
-            }
-            
-            // Afficher/masquer l'item avec animation
-            if (showItem) {
-                item.fadeIn(300);
-                visibleCount++;
-            } else {
-                item.fadeOut(300);
-                // Décocher si l'item était sélectionné pour comparaison
-                var checkbox = item.find('.compare-checkbox input[type="checkbox"]');
-                if (checkbox.is(':checked')) {
-                    checkbox.prop('checked', false).trigger('change');
-                }
-            }
-        });
-        
-        // Mettre à jour le compteur
-        updateResultsCount(visibleCount);
-    }
-    
-    // Mettre à jour le compteur de résultats
-    function updateResultsCount(count) {
-        var countElement = $('.results-count');
-        if (countElement.length) {
-            countElement.text(count + ' résultat(s)');
-        }
-    }
-    
     // Gestion des infobulles - SOLUTION SIMPLE
     $('.info-btn').on('mouseenter', function() {
         $(this).next('.info-tooltip').css('display', 'block');
-    });
-    
+        // Mettre à jour le compteur
+        updateResultsCount(visibleCount);
     $('.info-btn').on('mouseleave', function() {
         $(this).next('.info-tooltip').css('display', 'none');
     });
