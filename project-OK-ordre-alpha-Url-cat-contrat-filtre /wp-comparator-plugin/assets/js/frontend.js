@@ -311,6 +311,8 @@ jQuery(document).ready(function($) {
         });
     }
     
+}
+)
 // Gestion des infobulles - VERSION AMÉLIORÉE
 $(document).on('mouseenter click', '.info-btn', function(e) {
     e.preventDefault();
