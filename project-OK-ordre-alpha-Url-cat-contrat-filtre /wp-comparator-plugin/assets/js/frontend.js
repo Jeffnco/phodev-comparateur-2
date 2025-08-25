@@ -311,13 +311,41 @@ jQuery(document).ready(function($) {
         });
     }
     
-    // Gestion des erreurs d'images
-    $('img').on('error', function() {
-        $(this).attr('src', wpComparatorFrontend.defaultImage || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2U8L3RleHQ+PC9zdmc+');
-    });
+// Gestion des infobulles - VERSION AMÉLIORÉE
+$(document).on('mouseenter click', '.info-btn', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     
-    // Initialisation
-    animateItems();
+    var tooltip = $(this).next('.info-tooltip');
+    
+    // Fermer toutes les autres infobulles
+    $('.info-tooltip').not(tooltip).hide();
+    
+    // Toggle ou afficher cette infobulle
+    if (e.type === 'click') {
+        tooltip.toggle();
+    } else {
+        tooltip.show();
+    }
+});
+
+// Fermer l'infobulle en cliquant sur le bouton fermer
+$(document).on('click', '.info-tooltip-close', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $(this).closest('.info-tooltip').hide();
+});
+
+// Fermer les infobulles en cliquant à l'extérieur
+$(document).on('click', function(e) {
+    if (!$(e.target).closest('.info-btn, .info-tooltip').length) {
+        $('.info-tooltip').hide();
+    }
+});
+
+// Empêcher la fermeture quand on clique dans l'infobulle
+$(document).on('click', '.info-tooltip', function(e) {
+    e.stopPropagation();
 });
 
 // Fonctions utilitaires globales
