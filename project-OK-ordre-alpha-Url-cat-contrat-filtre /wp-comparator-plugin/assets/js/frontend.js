@@ -129,11 +129,17 @@ jQuery(document).ready(function($) {
                 if (!hasCategory) {
                     showItem = false;
                 }
+            }
+        }
+        )
+    }
     // Gestion des infobulles - SOLUTION SIMPLE
     $('.info-btn').on('mouseenter', function() {
         $(this).next('.info-tooltip').css('display', 'block');
         // Mettre à jour le compteur
         updateResultsCount(visibleCount);
+    }
+    )
     $('.info-btn').on('mouseleave', function() {
         $(this).next('.info-tooltip').css('display', 'none');
     });
