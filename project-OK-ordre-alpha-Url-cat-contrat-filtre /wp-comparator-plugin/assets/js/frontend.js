@@ -133,15 +133,37 @@ jQuery(document).ready(function($) {
         }
         )
     }
-    // Gestion des infobulles - SOLUTION SIMPLE
-    $('.info-btn').on('mouseenter', function() {
-        $(this).next('.info-tooltip').css('display', 'block');
-        // Mettre à jour le compteur
-        updateResultsCount(visibleCount);
-    }
-    )
-    $('.info-btn').on('mouseleave', function() {
-        $(this).next('.info-tooltip').css('display', 'none');
+    // Gestion des infobulles - Ouverture au clic ou survol
+    $('.info-btn').on('mouseenter click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var tooltip = $(this).next('.info-tooltip');
+        
+        // Fermer toutes les autres infobulles
+        $('.info-tooltip').not(tooltip).hide();
+        
+        // Afficher cette infobulle
+        tooltip.show();
+    });
+    
+    // Fermer l'infobulle avec le bouton fermer
+    $(document).on('click', '.info-tooltip-close', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).closest('.info-tooltip').hide();
+    });
+    
+    // Fermer les infobulles en cliquant à l'extérieur
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.info-btn, .info-tooltip').length) {
+            $('.info-tooltip').hide();
+        }
+    });
+    
+    // Empêcher la fermeture quand on clique dans l'infobulle
+    $(document).on('click', '.info-tooltip', function(e) {
+        e.stopPropagation();
     });
     
     // Gestion des infobulles petites

@@ -144,7 +144,13 @@ if (!empty($type->intro_text)) {
                                         <span class="dashicons dashicons-info"></span>
                                     </button>
                                     <div class="info-tooltip">
-                                        <?php echo nl2br(esc_html($category->info_content)); ?>
+                                        <div class="info-tooltip-header">
+                                            <span style="font-weight: bold; font-size: 12px;">Information</span>
+                                            <button class="info-tooltip-close" type="button" title="Fermer">×</button>
+                                        </div>
+                                        <div class="info-tooltip-content">
+                                            <?php echo nl2br(esc_html($category->info_content)); ?>
+                                        </div>
                                     </div>
                                 <?php endif; ?>
                             </h3>
