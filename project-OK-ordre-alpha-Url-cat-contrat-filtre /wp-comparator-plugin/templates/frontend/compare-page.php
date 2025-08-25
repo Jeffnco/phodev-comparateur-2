@@ -158,11 +158,7 @@ if (!empty($type->intro_text)) {
                             <div class="comparison-table">
                                 <div class="table-header">
                                     <div class="field-column">Critère</div>
-                                <div class="info-tooltip">
-                                    <div class="info-tooltip-header">
-                                        <span style="font-weight: bold; font-size: 12px;">Information</span>
-                                        <button class="info-tooltip-close" type="button" title="Fermer">×</button>
-                                    </div>
+                                    <div class="item-column"><?php echo esc_html($display_item1->name); ?></div>
                                     <div class="item-column"><?php echo esc_html($display_item2->name); ?></div>
                                 </div>
                                 
