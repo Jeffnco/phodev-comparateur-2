@@ -130,8 +130,23 @@ jQuery(document).ready(function($) {
                     showItem = false;
                 }
             }
-        }
-        )
+            
+            // Afficher ou masquer l'item
+            if (showItem) {
+                item.show();
+                visibleCount++;
+            } else {
+                item.hide();
+            }
+        });
+        
+        // Mettre à jour le compteur de résultats
+        updateResultsCount(visibleCount);
+    }
+    
+    // Fonction pour mettre à jour le compteur de résultats
+    function updateResultsCount(count) {
+        $('.results-count').text(count + ' résultat(s)');
     }
     // Gestion des infobulles - Ouverture au clic ou survol
     $('.info-btn').on('mouseenter click', function(e) {
