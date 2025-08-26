@@ -107,7 +107,6 @@ jQuery(document).ready(function($) {
             console.log('📝 Réinitialisation du select:', $(this).attr('class'));
             $(this).val('').trigger('change');
         });
-        });
         
         // Réinitialiser la sélection de comparaison
         $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
