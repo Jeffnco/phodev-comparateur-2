@@ -66,14 +66,15 @@ jQuery(document).ready(function($) {
     $('#reset-filters').on('click', function() {
         console.log('Bouton réinitialiser cliqué');
         
-        // Réinitialiser tous les selects de filtres
-        $('.filter-select').val('').trigger('change');
+        // Debug: vérifier si les éléments existent
+        console.log('Nombre de .filter-select trouvés:', $('.filter-select').length);
         
-        // Réinitialiser tous les inputs radio de filtres
-        $('input[type="radio"][name*="filter"]').prop('checked', false);
+        // Réinitialiser TOUS les selects dans les filtres
+        $('#comparator-filters-form select').val('');
         
-        // Réinitialiser toutes les checkboxes de filtres
-        $('input[type="checkbox"][name*="filter"]').prop('checked', false);
+        // Réinitialiser tous les inputs dans les filtres
+        $('#comparator-filters-form input[type="radio"]').prop('checked', false);
+        $('#comparator-filters-form input[type="checkbox"]').prop('checked', false);
         
         // Afficher tous les items
         $('.comparator-item').show();
