@@ -213,55 +213,115 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($fields as $field): ?>
-                                <tr>
-                                    <td><?php echo $field->sort_order; ?></td>
+                            <?php 
+                            // Affichage hiérarchique : d'abord les catégories, puis leurs champs enfants
+                            
+                            // 1. Afficher les catégories avec leurs champs enfants
+                            foreach ($categories as $category): 
+                                // Afficher la catégorie
+                                ?>
+                                <tr style="background-color: #f0f8ff; border-left: 4px solid #0073aa;">
+                                    <td><strong><?php echo $category->sort_order; ?></strong></td>
                                     <td>
-                                        <strong><?php echo esc_html($field->name); ?></strong>
-                                        <?php if ($field->field_type == 'category'): ?>
+                                        <strong style="color: #0073aa; font-size: 16px;">
                                             <span class="dashicons dashicons-category" style="color: #0073aa;" title="Catégorie"></span>
-                                        <?php endif; ?>
+                                            <?php echo esc_html($category->name); ?>
+                                        </strong>
                                     </td>
-                                    <td>
-                                        <?php echo $field->field_type == 'category' ? 'Catégorie' : 'Champ description'; ?>
-                                        <?php if ($field->has_info_button): ?>
+                                    <td><strong>Catégorie</strong>
+                                        <?php if ($category->has_info_button): ?>
                                             <span class="dashicons dashicons-info" style="color: #666;" title="Avec bouton info"></span>
                                         <?php endif; ?>
                                     </td>
+                                    <td>-</td>
+                                    <td>-</td>
                                     <td>
-                                        <?php if ($field->parent_category_id): ?>
-                                            <?php
-                                            $parent = null;
-                                            foreach ($categories as $cat) {
-                                                if ($cat->id == $field->parent_category_id) {
-                                                    $parent = $cat;
-                                                    break;
-                                                }
-                                            }
-                                            echo $parent ? esc_html($parent->name) : 'Catégorie supprimée';
-                                            ?>
-                                        <?php else: ?>
-                                            -
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php if ($field->is_filterable): ?>
-                                            <span class="dashicons dashicons-filter" style="color: #28a745;" title="Filtrable"></span>
-                                            <?php echo esc_html($field->filter_name); ?>
-                                        <?php else: ?>
-                                            -
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <a href="?page=wp-comparator-fields&type_id=<?php echo $selected_type; ?>&edit_field=<?php echo $field->id; ?>" class="button button-small">
+                                        <a href="?page=wp-comparator-fields&type_id=<?php echo $selected_type; ?>&edit_field=<?php echo $category->id; ?>" class="button button-small">
                                             Éditer
                                         </a>
-                                        <button class="button button-small button-link-delete" onclick="deleteField(<?php echo $field->id; ?>)">
+                                        <button class="button button-small button-link-delete" onclick="deleteField(<?php echo $category->id; ?>)">
                                             Supprimer
                                         </button>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
+                                <?php
+                                
+                                // Afficher les champs enfants de cette catégorie
+                                foreach ($fields as $field):
+                                    if ($field->field_type == 'description' && $field->parent_category_id == $category->id):
+                                ?>
+                                        <tr style="background-color: #fafafa;">
+                                            <td style="padding-left: 30px;"><?php echo $field->sort_order; ?></td>
+                                            <td style="padding-left: 30px;">
+                                                <span class="dashicons dashicons-arrow-right" style="color: #999; font-size: 14px;"></span>
+                                                <?php echo esc_html($field->name); ?>
+                                            </td>
+                                            <td>Champ description</td>
+                                            <td style="color: #0073aa; font-weight: 600;">
+                                                <?php echo esc_html($category->name); ?>
+                                            </td>
+                                            <td>
+                                                <?php if ($field->is_filterable): ?>
+                                                    <span class="dashicons dashicons-filter" style="color: #28a745;" title="Filtrable"></span>
+                                                    <?php echo esc_html($field->filter_name); ?>
+                                                <?php else: ?>
+                                                    -
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <a href="?page=wp-comparator-fields&type_id=<?php echo $selected_type; ?>&edit_field=<?php echo $field->id; ?>" class="button button-small">
+                                                    Éditer
+                                                </a>
+                                                <button class="button button-small button-link-delete" onclick="deleteField(<?php echo $field->id; ?>)">
+                                                    Supprimer
+                                                </button>
+                                            </td>
+                                        </tr>
+                                <?php
+                                    endif;
+                                endforeach;
+                            endforeach;
+                            
+                            // 2. Afficher les champs orphelins (sans catégorie parente)
+                            $orphan_fields = array_filter($fields, function($field) {
+                                return $field->field_type == 'description' && empty($field->parent_category_id);
+                            });
+                            
+                            if (!empty($orphan_fields)):
+                            ?>
+                                <tr style="background-color: #fff3cd; border-left: 4px solid #ffc107;">
+                                    <td colspan="6" style="text-align: center; font-style: italic; color: #856404;">
+                                        <strong>⚠️ Champs sans catégorie parente</strong>
+                                    </td>
+                                </tr>
+                                <?php foreach ($orphan_fields as $field): ?>
+                                    <tr style="background-color: #fff3cd;">
+                                        <td><?php echo $field->sort_order; ?></td>
+                                        <td>
+                                            <span class="dashicons dashicons-warning" style="color: #ffc107;"></span>
+                                            <?php echo esc_html($field->name); ?>
+                                        </td>
+                                        <td>Champ description</td>
+                                        <td style="color: #856404; font-style: italic;">Aucune catégorie</td>
+                                        <td>
+                                            <?php if ($field->is_filterable): ?>
+                                                <span class="dashicons dashicons-filter" style="color: #28a745;" title="Filtrable"></span>
+                                                <?php echo esc_html($field->filter_name); ?>
+                                            <?php else: ?>
+                                                -
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <a href="?page=wp-comparator-fields&type_id=<?php echo $selected_type; ?>&edit_field=<?php echo $field->id; ?>" class="button button-small">
+                                                Éditer
+                                            </a>
+                                            <button class="button button-small button-link-delete" onclick="deleteField(<?php echo $field->id; ?>)">
+                                                Supprimer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 <?php endif; ?>
