@@ -96,26 +96,36 @@ jQuery(document).ready(function($) {
         filterItems();
     });
     
-
-    // Bouton réinitialiser - VERSION CORRIGÉE
-    $('#reset-filters').on('click', function(e) {
+    // ========================================
+    // BOUTON RÉINITIALISER - VERSION FINALE
+    // ========================================
+    
+    // SUPPRESSION DE TOUS LES ÉVÉNEMENTS EXISTANTS ET CRÉATION D'UN NOUVEAU
+    $(document).off('click', '#reset-filters');
+    
+    $(document).on('click', '#reset-filters', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        
         console.log('🔄 BOUTON RÉINITIALISER CLIQUÉ !');
         
-        // Réinitialiser tous les selects
-        $('.filter-select').each(function() {
-            $(this).val('').trigger('change');
+        // Réinitialiser MANUELLEMENT chaque select UN PAR UN
+        $('.filter-select').each(function(index) {
+            console.log('🔄 Réinitialisation select #' + index + ':', $(this).attr('id') || $(this).attr('class'));
+            $(this).val('');
         });
+        
+        // Déclencher le filtrage
+        filterItems();
         
         // Réinitialiser la sélection de comparaison
         $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
         selectedItems = [];
-        
-        // Mettre à jour l'affichage
-        filterItems();
         updateComparisonToolbar();
         
         console.log('✅ Réinitialisation terminée !');
+        
+        return false;
     });
     
     // ========================================

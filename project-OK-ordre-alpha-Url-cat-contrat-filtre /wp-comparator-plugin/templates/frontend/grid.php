@@ -219,15 +219,6 @@ jQuery(document).ready(function($) {
     });
     
     // Gestion des filtres
-    $('#comparator-filters-form').on('submit', function(e) {
-        e.preventDefault();
-        // Implémentation du filtrage via AJAX
-        console.log('Filtrage des résultats...');
-    });
-    
-    $('#reset-filters').on('click', function() {
-        $('#comparator-filters-form')[0].reset();
-        $('.comparator-item').show();
-    });
+    // Les filtres sont gérés dans frontend.js
 });
 </script>
