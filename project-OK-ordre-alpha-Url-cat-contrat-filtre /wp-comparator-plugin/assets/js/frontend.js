@@ -62,21 +62,22 @@ jQuery(document).ready(function($) {
         filterItems();
     });
     
-    // Réinitialiser les filtres
+    // Réinitialiser les filtres - CORRECTION FINALE
     $('#reset-filters').on('click', function() {
-        console.log('Bouton réinitialiser cliqué');
-        
-        // Debug: vérifier si les éléments existent
-        console.log('Nombre de .filter-select trouvés:', $('.filter-select').length);
+        console.log('🔄 Bouton réinitialiser cliqué');
         
         // Réinitialiser TOUS les selects dans les filtres
-        $('#comparator-filters-form select').val('');
+        $('#comparator-filters-form select').each(function() {
+            console.log('📝 Réinitialisation select:', $(this).attr('class'));
+            $(this).val('');
+        });
         
         // Réinitialiser tous les inputs dans les filtres
         $('#comparator-filters-form input[type="radio"]').prop('checked', false);
         $('#comparator-filters-form input[type="checkbox"]').prop('checked', false);
         
         // DÉCLENCHER LE FILTRAGE pour afficher tous les items
+        console.log('🔍 Déclenchement du filtrage...');
         filterItems();
         
         // Réinitialiser la sélection de comparaison
@@ -86,11 +87,12 @@ jQuery(document).ready(function($) {
         // Mettre à jour la barre d'outils de comparaison
         updateComparisonToolbar();
         
-        console.log('Filtres réinitialisés');
+        console.log('✅ Filtres réinitialisés');
     });
     
     // Fonction de filtrage côté client
     function filterItems() {
+        console.log('🔍 Fonction filterItems() appelée');
         var activeFilters = {};
         var activeCategoryFilter = '';
         
@@ -100,12 +102,17 @@ jQuery(document).ready(function($) {
             var filterType = $(this).data('filter-type');
             var value = $(this).val();
             
+            console.log('🔍 Filtre trouvé:', {fieldId: fieldId, filterType: filterType, value: value});
+            
             if (value && fieldId) {
                 activeFilters[fieldId] = value;
             } else if (value && filterType === 'contract-category') {
                 activeCategoryFilter = value;
             }
         });
+        
+        console.log('🔍 Filtres actifs:', activeFilters);
+        console.log('🔍 Catégorie active:', activeCategoryFilter);
         
         var visibleCount = 0;
         
@@ -156,6 +163,8 @@ jQuery(document).ready(function($) {
             }
         });
         
+        console.log('👁️ Items visibles:', visibleCount);
+        
         // Mettre à jour le compteur de résultats
         updateResultsCount(visibleCount);
     }
@@ -164,6 +173,7 @@ jQuery(document).ready(function($) {
     function updateResultsCount(count) {
         $('.results-count').text(count + ' résultat(s)');
     }
+    
     // Gestion des infobulles - Ouverture au clic ou survol
     $('.info-btn').on('mouseenter click', function(e) {
         e.preventDefault();
@@ -230,7 +240,7 @@ jQuery(document).ready(function($) {
         }
     );
     
-    // Gestion des boutons "En savoir plus" pour les descriptions longues - COMME LE BOUTON i
+    // Gestion des boutons "En savoir plus" pour les descriptions longues
     $(document).on('click', '.btn-more-info', function(e) {
         e.preventDefault();
         console.log('Bouton En savoir plus cliqué (délégué)');
@@ -273,7 +283,6 @@ jQuery(document).ready(function($) {
     // Appliquer le responsive au chargement
     makeTablesResponsive();
     
-    // Gestion du scroll pour la barre d'outils fixe
     // Animation smooth scroll vers la section de comparaison
     function scrollToComparison() {
         var section = $('#comparison-section');
@@ -342,43 +351,6 @@ jQuery(document).ready(function($) {
         });
     }
     
-});
-
-// Gestion des infobulles - VERSION AMÉLIORÉE
-$(document).on('mouseenter click', '.info-btn', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    var tooltip = $(this).next('.info-tooltip');
-    
-    // Fermer toutes les autres infobulles
-    $('.info-tooltip').not(tooltip).hide();
-    
-    // Toggle ou afficher cette infobulle
-    if (e.type === 'click') {
-        tooltip.toggle();
-    } else {
-        tooltip.show();
-    }
-});
-
-// Fermer l'infobulle en cliquant sur le bouton fermer
-$(document).on('click', '.info-tooltip-close', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $(this).closest('.info-tooltip').hide();
-});
-
-// Fermer les infobulles en cliquant à l'extérieur
-$(document).on('click', function(e) {
-    if (!$(e.target).closest('.info-btn, .info-tooltip').length) {
-        $('.info-tooltip').hide();
-    }
-});
-
-// Empêcher la fermeture quand on clique dans l'infobulle
-$(document).on('click', '.info-tooltip', function(e) {
-    e.stopPropagation();
 });
 
 // Fonctions utilitaires globales
