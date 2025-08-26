@@ -76,26 +76,17 @@ jQuery(document).ready(function($) {
         $('#comparator-filters-form input[type="radio"]').prop('checked', false);
         $('#comparator-filters-form input[type="checkbox"]').prop('checked', false);
         
-        // Afficher tous les items
-        $('.comparator-item').show();
-        
-        // Mettre à jour le compteur
-        var totalItems = $('.comparator-item').length;
-        updateResultsCount(totalItems);
+        // DÉCLENCHER LE FILTRAGE pour afficher tous les items
+        filterItems();
         
         // Réinitialiser la sélection de comparaison
         $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
         selectedItems = [];
         
-        // Mettre à jour la barre d'outils de comparaison si elle existe
-        if (typeof updateComparisonToolbar === 'function') {
-            updateComparisonToolbar();
-        } else {
-            // Masquer la section de comparaison
-            $('#comparison-section').hide();
-        }
+        // Mettre à jour la barre d'outils de comparaison
+        updateComparisonToolbar();
         
-        console.log('Filtres réinitialisés, ' + totalItems + ' items affichés');
+        console.log('Filtres réinitialisés');
     });
     
     // Fonction de filtrage côté client
