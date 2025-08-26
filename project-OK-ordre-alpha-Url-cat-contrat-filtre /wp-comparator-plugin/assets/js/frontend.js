@@ -76,7 +76,7 @@ jQuery(document).ready(function($) {
         // Réinitialiser la sélection de comparaison
         $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
         selectedItems = [];
-        updateToolbar();
+        updateComparisonToolbar();
     });
     
     // Fonction de filtrage côté client
