@@ -1,100 +1,20 @@
 jQuery(document).ready(function($) {
+    console.log('🚀 WP Comparator Frontend JS chargé');
     
     // Variables globales
     var selectedItems = [];
-    var maxSelection = parseInt(wpComparatorFrontend.maxSelection) || 2;
+    var maxSelection = 2;
     
-    // Gestion de la sélection des éléments pour comparaison
-    $('.compare-checkbox input[type="checkbox"]').on('change', function() {
-        var itemSlug = $(this).val();
-        var itemName = $(this).data('item-name');
-        
-        if ($(this).is(':checked')) {
-            if (selectedItems.length >= maxSelection) {
-                $(this).prop('checked', false);
-                alert('Vous ne pouvez sélectionner que ' + maxSelection + ' éléments maximum.');
-                return;
-            }
-            selectedItems.push({slug: itemSlug, name: itemName});
-        } else {
-            selectedItems = selectedItems.filter(function(item) {
-                return item.slug !== itemSlug;
-            });
-        }
-        
-        updateComparisonToolbar();
-    });
-    
-    // Mise à jour de la barre d'outils de comparaison
-    function updateComparisonToolbar() {
-        var toolbar = $('#comparison-toolbar');
-        var count = selectedItems.length;
-        
-        if (count > 0) {
-            toolbar.show();
-            $('.selected-count').text(count + ' élément(s) sélectionné(s)');
-            $('#compare-selected').prop('disabled', count < 2);
-        } else {
-            toolbar.hide();
-        }
-    }
-    
-    // Comparer les éléments sélectionnés
-    $('#compare-selected').on('click', function() {
-        if (selectedItems.length >= 2) {
-            var typeSlug = wpComparatorFrontend.currentTypeSlug;
-            var compareUrl = '?compare=' + selectedItems[0].slug + ',' + selectedItems[1].slug + '&type=' + typeSlug;
-            window.location.href = compareUrl;
-        } else {
-            alert('Veuillez sélectionner exactement 2 contrats pour les comparer.');
-        }
-    });
-    
-    // Effacer la sélection
-    $('#clear-selection').on('click', function() {
-        $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
-        selectedItems = [];
-        updateComparisonToolbar();
-    });
-    
-    // Gestion des filtres - Filtrage côté client
-    $('.filter-select').on('change', function() {
-        filterItems();
-    });
-    
-    // Réinitialiser les filtres - CORRECTION FINALE
-    $('#reset-filters').on('click', function() {
-        console.log('🔄 Bouton réinitialiser cliqué');
-        
-        // Réinitialiser TOUS les selects dans les filtres
-        $('#comparator-filters-form select').each(function() {
-            console.log('📝 Réinitialisation select:', $(this).attr('class'));
-            $(this).val('');
-        });
-        
-        // Réinitialiser tous les inputs dans les filtres
-        $('#comparator-filters-form input[type="radio"]').prop('checked', false);
-        $('#comparator-filters-form input[type="checkbox"]').prop('checked', false);
-        
-        // DÉCLENCHER LE FILTRAGE pour afficher tous les items
-        console.log('🔍 Déclenchement du filtrage...');
-        filterItems();
-        
-        // Réinitialiser la sélection de comparaison
-        $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
-        selectedItems = [];
-        
-        // Mettre à jour la barre d'outils de comparaison
-        updateComparisonToolbar();
-        
-        console.log('✅ Filtres réinitialisés');
-    });
+    // ========================================
+    // GESTION DES FILTRES
+    // ========================================
     
     // Fonction de filtrage côté client
     function filterItems() {
         console.log('🔍 Fonction filterItems() appelée');
         var activeFilters = {};
         var activeCategoryFilter = '';
+        var visibleCount = 0;
         
         // Récupérer tous les filtres actifs
         $('.filter-select').each(function() {
@@ -102,7 +22,7 @@ jQuery(document).ready(function($) {
             var filterType = $(this).data('filter-type');
             var value = $(this).val();
             
-            console.log('🔍 Filtre trouvé:', {fieldId: fieldId, filterType: filterType, value: value});
+            console.log('🔍 Filtre:', {fieldId: fieldId, filterType: filterType, value: value});
             
             if (value && fieldId) {
                 activeFilters[fieldId] = value;
@@ -114,8 +34,6 @@ jQuery(document).ready(function($) {
         console.log('🔍 Filtres actifs:', activeFilters);
         console.log('🔍 Catégorie active:', activeCategoryFilter);
         
-        var visibleCount = 0;
-        
         // Filtrer chaque contrat
         $('.comparator-item').each(function() {
             var item = $(this);
@@ -125,14 +43,13 @@ jQuery(document).ready(function($) {
             $.each(activeFilters, function(fieldId, filterValue) {
                 var itemValue = item.data('filter-' + fieldId);
                 
-                // Comparer les valeurs (insensible à la casse et aux espaces)
                 if (itemValue && filterValue) {
                     var itemValueClean = String(itemValue).trim().toLowerCase();
                     var filterValueClean = String(filterValue).trim().toLowerCase();
                     
                     if (itemValueClean !== filterValueClean) {
                         showItem = false;
-                        return false; // Sortir de la boucle
+                        return false;
                     }
                 }
             });
@@ -145,7 +62,7 @@ jQuery(document).ready(function($) {
                 itemCategories.each(function() {
                     if ($(this).data('category') === activeCategoryFilter) {
                         hasCategory = true;
-                        return false; // Sortir de la boucle
+                        return false;
                     }
                 });
                 
@@ -164,27 +81,139 @@ jQuery(document).ready(function($) {
         });
         
         console.log('👁️ Items visibles:', visibleCount);
-        
-        // Mettre à jour le compteur de résultats
         updateResultsCount(visibleCount);
     }
     
     // Fonction pour mettre à jour le compteur de résultats
     function updateResultsCount(count) {
         $('.results-count').text(count + ' résultat(s)');
+        console.log('📊 Compteur mis à jour:', count);
     }
     
-    // Gestion des infobulles - Ouverture au clic ou survol
-    $('.info-btn').on('mouseenter click', function(e) {
+    // Événement de changement des filtres
+    $('.filter-select').on('change', function() {
+        console.log('🔄 Filtre changé:', $(this).val());
+        filterItems();
+    });
+    
+    // ========================================
+    // BOUTON RÉINITIALISER - VERSION FINALE
+    // ========================================
+    $('#reset-filters').on('click', function() {
+        console.log('🔄 BOUTON RÉINITIALISER CLIQUÉ !');
+        
+        // Compter les filtres avant réinitialisation
+        var filtersCount = $('.filter-select').length;
+        console.log('📝 Nombre de filtres trouvés:', filtersCount);
+        
+        // Réinitialiser TOUS les selects
+        $('.filter-select').each(function(index) {
+            var oldValue = $(this).val();
+            $(this).val('');
+            console.log('📝 Filtre ' + index + ' réinitialisé:', oldValue + ' → vide');
+        });
+        
+        // Réinitialiser la sélection de comparaison
+        $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
+        selectedItems = [];
+        console.log('📝 Sélection de comparaison réinitialisée');
+        
+        // Déclencher le filtrage pour tout réafficher
+        console.log('🔍 Déclenchement du filtrage...');
+        filterItems();
+        
+        // Mettre à jour la barre d'outils de comparaison
+        updateComparisonToolbar();
+        
+        console.log('✅ Réinitialisation terminée !');
+    });
+    
+    // ========================================
+    // GESTION DE LA COMPARAISON
+    // ========================================
+    
+    // Fonction de mise à jour de la barre d'outils de comparaison
+    function updateComparisonToolbar() {
+        var section = $('#comparison-section');
+        var count = selectedItems.length;
+        
+        console.log('🔧 Mise à jour toolbar, items sélectionnés:', count);
+        
+        if (count > 0) {
+            section.show();
+            $('.selected-count').text(count + ' contrat(s) sélectionné(s)');
+            
+            if (count === 2) {
+                $('#compare-selected').prop('disabled', false).removeClass('disabled');
+                $('.selection-help').text('Parfait ! Vous pouvez maintenant comparer ces 2 contrats');
+            } else if (count === 1) {
+                $('#compare-selected').prop('disabled', true).addClass('disabled');
+                $('.selection-help').text('Sélectionnez 1 contrat supplémentaire pour comparer');
+            } else {
+                $('#compare-selected').prop('disabled', true).addClass('disabled');
+                $('.selection-help').text('Trop de contrats sélectionnés, maximum 2');
+            }
+        } else {
+            section.hide();
+        }
+    }
+    
+    // Gestion de la sélection des éléments pour comparaison
+    $('.compare-checkbox input[type="checkbox"]').on('change', function() {
+        var itemSlug = $(this).val();
+        var itemName = $(this).data('item-name');
+        
+        console.log('☑️ Checkbox changée:', itemSlug, $(this).is(':checked'));
+        
+        if ($(this).is(':checked')) {
+            if (selectedItems.length >= maxSelection) {
+                $(this).prop('checked', false);
+                alert('Vous ne pouvez sélectionner que ' + maxSelection + ' éléments maximum.');
+                return;
+            }
+            selectedItems.push({slug: itemSlug, name: itemName});
+        } else {
+            selectedItems = selectedItems.filter(function(item) {
+                return item.slug !== itemSlug;
+            });
+        }
+        
+        updateComparisonToolbar();
+    });
+    
+    // Comparer les éléments sélectionnés
+    $('#compare-selected').on('click', function() {
+        console.log('🔍 Bouton comparer cliqué, items:', selectedItems.length);
+        
+        if (selectedItems.length === 2) {
+            var typeSlug = wpComparatorFrontend.currentTypeSlug || 'default';
+            var compareUrl = '?compare=' + selectedItems[0].slug + ',' + selectedItems[1].slug + '&type=' + typeSlug;
+            console.log('🔗 Redirection vers:', compareUrl);
+            window.location.href = compareUrl;
+        } else {
+            alert('Veuillez sélectionner exactement 2 contrats pour les comparer.');
+        }
+    });
+    
+    // Effacer la sélection
+    $('#clear-selection').on('click', function() {
+        console.log('🗑️ Effacement de la sélection');
+        $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
+        selectedItems = [];
+        updateComparisonToolbar();
+    });
+    
+    // ========================================
+    // GESTION DES INFOBULLES
+    // ========================================
+    
+    // Infobulles principales
+    $(document).on('mouseenter click', '.info-btn', function(e) {
         e.preventDefault();
         e.stopPropagation();
         
         var tooltip = $(this).next('.info-tooltip');
-        
-        // Fermer toutes les autres infobulles
         $('.info-tooltip').not(tooltip).hide();
-        
-        // Afficher cette infobulle
         tooltip.show();
     });
     
@@ -207,12 +236,11 @@ jQuery(document).ready(function($) {
         e.stopPropagation();
     });
     
-    // Gestion des infobulles petites
+    // Infobulles petites au survol
     $('.info-btn-small').hover(
         function() {
             var title = $(this).attr('title');
             if (title) {
-                // Créer une infobulle temporaire
                 var tooltip = $('<div class="temp-tooltip">' + title + '</div>');
                 tooltip.css({
                     position: 'absolute',
@@ -240,123 +268,45 @@ jQuery(document).ready(function($) {
         }
     );
     
-    // Gestion des boutons "En savoir plus" pour les descriptions longues
+    // ========================================
+    // GESTION DES DESCRIPTIONS LONGUES
+    // ========================================
+    
+    // Boutons "En savoir plus"
     $(document).on('click', '.btn-more-info', function(e) {
         e.preventDefault();
-        console.log('Bouton En savoir plus cliqué (délégué)');
+        console.log('📖 Bouton En savoir plus cliqué');
+        
         var moreInfoContent = $(this).siblings('.more-info-content');
-        console.log('Contenu trouvé:', moreInfoContent.length);
+        console.log('📖 Contenu trouvé:', moreInfoContent.length);
         
         if (moreInfoContent.hasClass('show')) {
-            console.log('Masquer le contenu');
             moreInfoContent.removeClass('show');
             $(this).text('En savoir plus');
         } else {
-            console.log('Afficher le contenu');
             moreInfoContent.addClass('show');
             $(this).text('Réduire');
         }
     });
     
-    // Gestion des contenus déroulants
-    $(document).on('click', '.btnDeroulant', function(e) {
-        e.preventDefault();
-        $(this).siblings('.deroulant').slideToggle();
-        $(this).text($(this).text() === 'En savoir plus' ? 'Réduire' : 'En savoir plus');
-    });
+    // ========================================
+    // INITIALISATION
+    // ========================================
     
-    $(document).on('click', '.fermerDeroulant', function(e) {
-        e.preventDefault();
-        $(this).closest('.deroulant').slideUp();
-        $(this).closest('td').find('.btnDeroulant').text('En savoir plus');
-    });
+    console.log('✅ WP Comparator Frontend initialisé');
     
-    // Gestion du responsive pour les tableaux
-    function makeTablesResponsive() {
-        $('.ComparSeul table').each(function() {
-            if (!$(this).parent().hasClass('table-responsive')) {
-                $(this).wrap('<div class="table-responsive"></div>');
-            }
-        });
-    }
+    // Initialiser le compteur de résultats
+    var initialCount = $('.comparator-item:visible').length;
+    updateResultsCount(initialCount);
     
-    // Appliquer le responsive au chargement
-    makeTablesResponsive();
-    
-    // Animation smooth scroll vers la section de comparaison
-    function scrollToComparison() {
-        var section = $('#comparison-section');
-        if (section.is(':visible')) {
-            $('html, body').animate({
-                scrollTop: section.offset().top - 20
-            }, 500);
-        }
-    }
-    
-    // Déclencher le scroll quand on sélectionne le premier contrat
-    $('.compare-checkbox input[type="checkbox"]').on('change', function() {
-        setTimeout(function() {
-            if ($('#comparison-section').is(':visible')) {
-                scrollToComparison();
-            }
-        }, 100);
-    });
-    
-    // Animation d'apparition des éléments
-    function animateItems() {
-        $('.comparator-item').each(function(index) {
-            $(this).delay(index * 100).fadeIn();
-        });
-    }
-    
-    // Recherche en temps réel
-    $('#search-items').on('keyup', function() {
-        var searchTerm = $(this).val().toLowerCase();
-        
-        $('.comparator-item').each(function() {
-            var itemText = $(this).find('.item-title, .item-description').text().toLowerCase();
-            if (itemText.indexOf(searchTerm) === -1) {
-                $(this).hide();
-            } else {
-                $(this).show();
-            }
-        });
-        
-        updateResultsCount($('.comparator-item:visible').length);
-    });
-    
-    // Gestion des liens externes
-    $('a[target="_blank"]').on('click', function() {
-        // Ajouter un petit délai pour permettre l'ouverture
-        setTimeout(function() {
-            console.log('Lien externe ouvert');
-        }, 100);
-    });
-    
-    // Lazy loading des images
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.classList.remove('lazy');
-                    imageObserver.unobserve(img);
-                }
-            });
-        });
-        
-        document.querySelectorAll('img[data-src]').forEach(img => {
-            imageObserver.observe(img);
-        });
-    }
-    
+    // Initialiser la barre d'outils de comparaison
+    updateComparisonToolbar();
 });
 
-// Fonctions utilitaires globales
+// ========================================
+// FONCTIONS UTILITAIRES GLOBALES
+// ========================================
 window.wpComparatorUtils = {
-    
-    // Formater une valeur pour l'affichage
     formatValue: function(value, type) {
         if (!value || value === '-') return '-';
         
@@ -372,7 +322,6 @@ window.wpComparatorUtils = {
         }
     },
     
-    // Générer un slug à partir d'un texte
     generateSlug: function(text) {
         return text.toLowerCase()
             .replace(/[^a-z0-9\s-]/g, '')
@@ -381,7 +330,6 @@ window.wpComparatorUtils = {
             .trim('-');
     },
     
-    // Débounce pour les recherches
     debounce: function(func, wait) {
         let timeout;
         return function executedFunction(...args) {
