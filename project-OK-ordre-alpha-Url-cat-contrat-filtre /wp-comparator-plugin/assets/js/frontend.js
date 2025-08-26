@@ -64,13 +64,19 @@ jQuery(document).ready(function($) {
     
     // Réinitialiser les filtres
     $('#reset-filters').on('click', function() {
+        // Réinitialiser tous les types de filtres
         $('.filter-select').val('');
+        $('input[type="radio"][name*="filter"]').prop('checked', false);
+        $('input[type="checkbox"][name*="filter"]').prop('checked', false);
+        
+        // Afficher tous les items
         $('.comparator-item').show();
         updateResultsCount($('.comparator-item').length);
+        
         // Réinitialiser la sélection de comparaison
         $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
         selectedItems = [];
-        updateComparisonToolbar();
+        updateToolbar();
     });
     
     // Fonction de filtrage côté client
