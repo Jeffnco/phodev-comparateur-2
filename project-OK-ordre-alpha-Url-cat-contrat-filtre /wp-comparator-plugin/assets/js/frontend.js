@@ -64,19 +64,37 @@ jQuery(document).ready(function($) {
     
     // Réinitialiser les filtres
     $('#reset-filters').on('click', function() {
-        // Réinitialiser tous les types de filtres
-        $('.filter-select').val('');
+        console.log('Bouton réinitialiser cliqué');
+        
+        // Réinitialiser tous les selects de filtres
+        $('.filter-select').val('').trigger('change');
+        
+        // Réinitialiser tous les inputs radio de filtres
         $('input[type="radio"][name*="filter"]').prop('checked', false);
+        
+        // Réinitialiser toutes les checkboxes de filtres
         $('input[type="checkbox"][name*="filter"]').prop('checked', false);
         
         // Afficher tous les items
         $('.comparator-item').show();
-        updateResultsCount($('.comparator-item').length);
+        
+        // Mettre à jour le compteur
+        var totalItems = $('.comparator-item').length;
+        updateResultsCount(totalItems);
         
         // Réinitialiser la sélection de comparaison
         $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
         selectedItems = [];
-        updateComparisonToolbar();
+        
+        // Mettre à jour la barre d'outils de comparaison si elle existe
+        if (typeof updateComparisonToolbar === 'function') {
+            updateComparisonToolbar();
+        } else {
+            // Masquer la section de comparaison
+            $('#comparison-section').hide();
+        }
+        
+        console.log('Filtres réinitialisés, ' + totalItems + ' items affichés');
     });
     
     // Fonction de filtrage côté client
