@@ -102,15 +102,11 @@ jQuery(document).ready(function($) {
     $('#reset-filters').on('click', function() {
         console.log('🔄 BOUTON RÉINITIALISER CLIQUÉ !');
         
-        // Compter les filtres avant réinitialisation
-        var filtersCount = $('.filter-select').length;
-        console.log('📝 Nombre de filtres trouvés:', filtersCount);
-        
-        // Réinitialiser TOUS les selects
-        $('.filter-select').each(function(index) {
-            var oldValue = $(this).val();
-            $(this).val('');
-            console.log('📝 Filtre ' + index + ' réinitialisé:', oldValue + ' → vide');
+        // Réinitialiser manuellement tous les selects (car c'est un div, pas un form)
+        $('#comparator-filters-form select').each(function() {
+            console.log('📝 Réinitialisation du select:', $(this).attr('class'));
+            $(this).val('').trigger('change');
+        });
         });
         
         // Réinitialiser la sélection de comparaison
