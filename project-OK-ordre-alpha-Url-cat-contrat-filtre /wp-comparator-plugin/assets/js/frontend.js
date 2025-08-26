@@ -99,29 +99,50 @@ jQuery(document).ready(function($) {
     // ========================================
     // BOUTON RÉINITIALISER - VERSION FINALE
     // ========================================
-    $('#reset-filters').on('click', function() {
-        console.log('🔄 BOUTON RÉINITIALISER CLIQUÉ !');
+    
+    // VÉRIFICATION : Le bouton existe-t-il ?
+    console.log('🔍 Vérification bouton reset:', $('#reset-filters').length);
+    
+    // Attendre que tout soit chargé
+    setTimeout(function() {
+        console.log('⏰ Timeout - Vérification bouton reset:', $('#reset-filters').length);
         
-        // Réinitialiser manuellement tous les selects (car c'est un div, pas un form)
-        $('#comparator-filters-form select').each(function() {
-            console.log('📝 Réinitialisation du select:', $(this).attr('class'));
-            $(this).val('').trigger('change');
+        // Supprimer tous les événements existants sur ce bouton
+        $('#reset-filters').off('click');
+        
+        // Ajouter l'événement une seule fois
+        $('#reset-filters').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('🔄 BOUTON RÉINITIALISER CLIQUÉ !');
+            console.log('🔍 Nombre de selects trouvés:', $('.filter-select').length);
+            
+            // Réinitialiser chaque select individuellement
+            $('.filter-select').each(function(index) {
+                var oldValue = $(this).val();
+                $(this).val('');
+                var newValue = $(this).val();
+                console.log('📝 Select ' + index + ': "' + oldValue + '" → "' + newValue + '"');
+            });
+            
+            // Réinitialiser la sélection de comparaison
+            $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
+            selectedItems = [];
+            console.log('📝 Sélection de comparaison réinitialisée');
+            
+            // Déclencher le filtrage pour tout réafficher
+            console.log('🔍 Déclenchement du filtrage...');
+            filterItems();
+            
+            // Mettre à jour la barre d'outils de comparaison
+            updateComparisonToolbar();
+            
+            console.log('✅ Réinitialisation terminée !');
         });
         
-        // Réinitialiser la sélection de comparaison
-        $('.compare-checkbox input[type="checkbox"]').prop('checked', false);
-        selectedItems = [];
-        console.log('📝 Sélection de comparaison réinitialisée');
-        
-        // Déclencher le filtrage pour tout réafficher
-        console.log('🔍 Déclenchement du filtrage...');
-        filterItems();
-        
-        // Mettre à jour la barre d'outils de comparaison
-        updateComparisonToolbar();
-        
-        console.log('✅ Réinitialisation terminée !');
-    });
+        console.log('✅ Événement reset attaché !');
+    }, 1000);
     
     // ========================================
     // GESTION DE LA COMPARAISON

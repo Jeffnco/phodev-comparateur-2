@@ -64,7 +64,7 @@ class WP_Comparator_Frontend {
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('wp_comparator_frontend_nonce'),
             'homeUrl' => home_url('/'),
-            'currentTypeSlug' => isset($atts['type']) ? $atts['type'] : ''
+            'currentTypeSlug' => ''
         ));
     }
     
